@@ -46,7 +46,8 @@ class App extends React.Component {
       vidFit: false,
       loginInfo: {},
       messages: [],
-      showChatNotificationDot: false
+      showChatNotificationDot: false,
+      peopleCollapsed: false
     };
 
     this._settings = {
@@ -217,6 +218,12 @@ class App extends React.Component {
     });
   };
 
+  _openOrClosePeopleContainer = peopleCollapsed => {
+    this.setState({
+      peopleCollapsed
+    });
+  };
+
   _onVidFitClickHandler = () => {
     this.setState({
       vidFit: !this.state.vidFit
@@ -315,7 +322,8 @@ class App extends React.Component {
       isFullScreen,
       loginInfo,
       messages,
-      showChatNotificationDot
+      showChatNotificationDot,
+      peopleCollapsed
     } = this.state;
     return (
         <Layout className="app-layout">
@@ -435,6 +443,7 @@ class App extends React.Component {
                           ref={ref => {
                             this.conference = ref;
                           }}
+                          peopleCollapsed={peopleCollapsed}
                       />
                     </Content>
                     <div className="app-collapsed-button">
@@ -451,7 +460,7 @@ class App extends React.Component {
                       </Tooltip>
                     </div>
                     <div className="app-fullscreen-layout">
-                      <Tooltip title='Fit/Stretch Video'>
+                      {/* <Tooltip title='Fit/Stretch Video'>
                         <Button
                             icon={vidFit ? "minus-square"
                                 : "plus-square"}
@@ -459,6 +468,15 @@ class App extends React.Component {
                             shape="circle"
                             onClick={() => this._onVidFitClickHandler()}
                         />
+                      </Tooltip> */}
+                      <Tooltip title='Open/Close people panel'>
+                          <Button
+                              icon='usergroup-add'
+                              size="large"
+                              shape="circle"
+                              onClick={() => this._openOrClosePeopleContainer(
+                                  !peopleCollapsed)}
+                          />
                       </Tooltip>
                       <Tooltip title='Fullscreen/Exit'>
                         <Button
@@ -471,14 +489,13 @@ class App extends React.Component {
                         />
                       </Tooltip>
                     </div>
-
-              </Layout>
-            </Layout>
-          ) : loading ? (
-            <Spin size="large" tip="Connecting..." />
-          ) : (
-                <Card title="Join to Ion" className="app-login-card">
-                  <LoginForm handleLogin={this._handleJoin} createClient={this._createClient} />
+                  </Layout>
+                </Layout>
+            ) : loading ? (
+                <Spin size="large" tip="Connecting..."/>
+            ) : (
+                <Card title="Join a table" className="app-login-card">
+                  <LoginForm handleLogin={this._handleJoin}/>
                 </Card>
             )}
           </Content>

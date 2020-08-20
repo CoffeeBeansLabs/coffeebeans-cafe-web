@@ -13,8 +13,7 @@ class SmallVideoView extends React.Component {
   componentDidMount = () => {
     const { stream } = this.props;
     this.video.srcObject = stream;
-
-
+    console.log('My stream', stream);
   };
 
   componentWillUnmount = () => {

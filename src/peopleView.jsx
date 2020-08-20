@@ -1,10 +1,8 @@
 import React from "react";
-import { Spin, notification, Layout } from "antd";
+import { Spin, notification } from "antd";
 import { LocalVideoView, MainVideoView, SmallVideoView } from "./videoview";
 import { Client, LocalStream, RemoteStream } from 'ion-sdk-js';
 import "../styles/css/conference.scss";
-import ScrollArea from 'react-scrollbar';
-const { Sider } = Layout;
 
 class Conference extends React.Component {
   constructor() {
@@ -59,10 +57,10 @@ class Conference extends React.Component {
 
   muteMediaTrack = (type, enabled) => {
     let { localStream } = this.state;
-    if (!localStream) {
+    if(!localStream) {
       return
     }
-    if (enabled) {
+    if(enabled) {
       localStream.unmute(type)
     } else {
       localStream.mute(type)
@@ -183,7 +181,7 @@ class Conference extends React.Component {
   };
 
   render = () => {
-    const { client, vidFit, peopleCollapsed } = this.props;
+    const { client, vidFit } = this.props;
     const {
       streams,
       localStream,
@@ -194,27 +192,20 @@ class Conference extends React.Component {
     const id = client.uid;
     return (
       <div className="conference-layout">
-        <div className={peopleCollapsed ? "main-video-container w-100": "main-video-container" }>
-          {streams.length === 0 && (
+        {streams.length === 0 && (
+          <div className="conference-layout-wating">
             <Spin size="large" tip="Wait for other people joining ..." />
-          )}
-          {streams.map((item, index) => {
-            return index == 0 ? (
-              <MainVideoView key={item.mid} id={item.mid} stream={item.stream} vidFit={vidFit} />
-            ) : (
-                ""
-              );
-          })}
-        </div>
-
-        <div className={peopleCollapsed ? "all-other-videos-container w-0": "all-other-videos-container" }>
-          <ScrollArea
-            speed={0.8}
-            className="area"
-            contentClassName="content"
-            horizontal={false}
-          >
-            {localStream && (
+          </div>
+        )}
+        {streams.map((item, index) => {
+          return index == 0 ? (
+            <MainVideoView key={item.mid} id={item.mid} stream={item.stream} vidFit={vidFit} />
+          ) : (
+            ""
+          );
+        })}
+        {localStream && (
+          <div className="conference-local-video-layout">
               <LocalVideoView
                 id={id + "-video"}
                 label="Local Stream"
@@ -224,8 +215,10 @@ class Conference extends React.Component {
                 videoMuted={videoMuted}
                 videoType="localVideo"
               />
-            )}
-            {localScreen && (
+            </div>
+        )}
+        {localScreen && (
+          <div className="conference-local-screen-layout">
               <LocalVideoView
                 id={id + "-screen"}
                 label="Screen Sharing"
@@ -235,7 +228,10 @@ class Conference extends React.Component {
                 videoMuted={false}
                 videoType="localScreen"
               />
-            )}
+          </div>
+        )}
+        <div className="small-video-list-div">
+          <div className="small-video-list">
             {streams.map((item, index) => {
               return index > 0 ? (
                 <SmallVideoView
@@ -248,27 +244,11 @@ class Conference extends React.Component {
                   onClick={this._onChangeVideoPosition}
                 />
               ) : (
-                  <div />
-                );
+                <div />
+              );
             })}
-          </ScrollArea>
-        </div>
-
-        {/* <div className="small-video-list-div">
-          <div className="small-video-list">
-          <Sider
-              width={320}
-              style={{background: "sienna"}}
-              collapsedWidth={0}
-              trigger={null}
-              collapsible
-              collapsed={false}>
-            <div className='left-container'>
-
-            </div>
-          </Sider>
           </div>
-        </div> */}
+        </div>
       </div>
     );
   };

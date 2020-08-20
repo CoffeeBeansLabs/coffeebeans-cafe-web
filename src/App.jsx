@@ -27,6 +27,7 @@ import Conference from "./Conference";
 import LoginForm from "./LoginForm";
 import MediaSettings from './settings';
 import ToolShare from './ToolShare';
+import notificationSound from './assets/insight.mp3';
 
 const {confirm} = Modal;
 const {Header, Content, Footer, Sider} = Layout;
@@ -57,6 +58,8 @@ class App extends React.Component {
       isDevMode: false,
     };
 
+    this.notificationSound = new Audio(notificationSound);
+
     let settings = reactLocalStorage.getObject("settings");
     if (settings.codec !== undefined) {
       this._settings = settings;
@@ -80,6 +83,7 @@ class App extends React.Component {
   _handleJoin = async values => {
     this.setState({loading: true});
 
+  _createClient = () => {
     let url = "wss://" + window.location.host;
     //for dev by scripts
     if (process.env.NODE_ENV === "development") {
@@ -87,8 +91,16 @@ class App extends React.Component {
       url = proto + "://" + window.location.host;
     }
 
-    console.log("WS url is:" + url);
     let client = new Client({url: url});
+    client.url = url;
+
+    return client
+  }
+
+  _handleJoin = async values => {
+    this.setState({ loading: true });
+
+    let client = this._createClient();
 
     window.onunload = async () => {
       await this._cleanUp();
@@ -96,6 +108,8 @@ class App extends React.Component {
 
     client.on("peer-join", (id, info) => {
       this._notification(info.name + " Joined!", "");
+      this.notificationSound.currentTime = 0;
+      this.notificationSound.play();
     });
 
     client.on("peer-leave", (id) => {
@@ -461,13 +475,13 @@ class App extends React.Component {
                       </Tooltip>
                     </div>
 
-                  </Layout>
-                </Layout>
-            ) : loading ? (
-                <Spin size="large" tip="Connecting..."/>
-            ) : (
-                <Card title="Join a table" className="app-login-card">
-                  <LoginForm handleLogin={this._handleJoin}/>
+              </Layout>
+            </Layout>
+          ) : loading ? (
+            <Spin size="large" tip="Connecting..." />
+          ) : (
+                <Card title="Join to Ion" className="app-login-card">
+                  <LoginForm handleLogin={this._handleJoin} createClient={this._createClient} />
                 </Card>
             )}
           </Content>

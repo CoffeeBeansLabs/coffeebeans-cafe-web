@@ -1,11 +1,8 @@
-const webpack = require('webpack');
 const path = require('path');
-const copyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-
-module.exports = function(env) {
+module.exports = (env) => {
   const isEnvProduction = !!env && env.production;
   console.log('Production: ', isEnvProduction);
 
@@ -24,7 +21,7 @@ module.exports = function(env) {
         use: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
-        test: /\.(png|jpe?g|gif|svg)$/i,
+        test: /\.(png|jpe?g|gif|svg|mp3)$/i,
         use: [
           {
             loader: 'file-loader',
@@ -70,7 +67,6 @@ module.exports = function(env) {
   ],
   devServer: {
     hot: true,
-    host: 'localhost',
     proxy: {
       '/ws': {
          target: 'ws://localhost:8443',

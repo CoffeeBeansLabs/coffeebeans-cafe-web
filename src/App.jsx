@@ -80,9 +80,6 @@ class App extends React.Component {
     });
   };
 
-  _handleJoin = async values => {
-    this.setState({loading: true});
-
   _createClient = () => {
     let url = "wss://" + window.location.host;
     //for dev by scripts
@@ -318,7 +315,7 @@ class App extends React.Component {
       isFullScreen,
       loginInfo,
       messages,
-      showChatNotificationDot,
+      showChatNotificationDot
     } = this.state;
     return (
         <Layout className="app-layout">

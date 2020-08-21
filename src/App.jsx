@@ -168,11 +168,16 @@ class App extends React.Component {
       content: "Do you want to leave the room?",
       async onOk() {
         console.log("OK");
-        await this2._cleanUp();
-        this2.setState({login: false});
-        setTimeout(()=>{
-          window.location = '/'
-        },0);
+        try{
+          await this2._cleanUp();
+        } catch(e){
+
+        } finally{
+          this2.setState({login: false});
+          setTimeout(()=>{
+            window.location = '/'
+          },0);
+        }
       },
       onCancel() {
         console.log("Cancel");

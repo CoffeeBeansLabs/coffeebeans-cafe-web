@@ -191,6 +191,7 @@ class Conference extends React.Component {
       audioMuted,
       videoMuted
     } = this.state;
+    const loginInfo = JSON.parse(localStorage.getItem("loginInfo"));
     const id = client.uid;
     return (
       <div className="conference-layout">
@@ -217,7 +218,7 @@ class Conference extends React.Component {
             {localStream && (
               <LocalVideoView
                 id={id + "-video"}
-                label="Local Stream"
+                label={`${loginInfo.displayName} (You)`}
                 client={client}
                 stream={localStream}
                 audioMuted={audioMuted}
@@ -228,7 +229,7 @@ class Conference extends React.Component {
             {localScreen && (
               <LocalVideoView
                 id={id + "-screen"}
-                label="Screen Sharing"
+                label={`${loginInfo.displayName} (Your Screen)`}
                 client={client}
                 stream={localScreen}
                 audioMuted={false}

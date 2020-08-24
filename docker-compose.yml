@@ -11,9 +11,9 @@ services:
       - "caddy:/data"
     ports:
       # Prod ports
-      # - 80:80
-      # - 443:443
-      - 9090:9090
+      - 80:80
+      - 443:443
+      # - 9090:9090
     networks:
       - ionnet
     environment:
